@@ -259,42 +259,82 @@ def startup_dashboard():
         cursor = get_cursor(conn)
         
         # Get startup details
-        cursor.execute("""
-            SELECT s.*, d.domain_name,
-                   COALESCE(SUM(f.amount), 0) AS total_funding_received
-            FROM Startups s
-            JOIN Domains d ON s.domain_id = d.domain_id
-            LEFT JOIN Funding f ON s.startup_id = f.startup_id
-            WHERE s.startup_id = %s
-            GROUP BY s.startup_id
-        """, (startup_id,))
+        if DB_TYPE == 'postgresql':
+            cursor.execute("""
+                SELECT s.*, d.domain_name,
+                       COALESCE(SUM(f.amount), 0) AS total_funding_received
+                FROM Startups s
+                JOIN Domains d ON s.domain_id = d.domain_id
+                LEFT JOIN Funding f ON s.startup_id = f.startup_id
+                WHERE s.startup_id = %s
+                GROUP BY s.startup_id, s.name, s.email, s.password_hash, s.domain_id,
+                         s.funding_required, s.description, s.founded_date, s.location,
+                         s.website, s.is_funded, s.created_at, d.domain_name
+            """, (startup_id,))
+        else:
+            cursor.execute("""
+                SELECT s.*, d.domain_name,
+                       COALESCE(SUM(f.amount), 0) AS total_funding_received
+                FROM Startups s
+                JOIN Domains d ON s.domain_id = d.domain_id
+                LEFT JOIN Funding f ON s.startup_id = f.startup_id
+                WHERE s.startup_id = %s
+                GROUP BY s.startup_id
+            """, (startup_id,))
         startup = cursor.fetchone()
         
         # Get matched investors (MATCHMAKING ALGORITHM)
-        cursor.execute("""
-            SELECT 
-                i.investor_id,
-                i.name,
-                i.investment_min,
-                i.investment_max,
-                i.preferred_domains,
-                i.location,
-                i.portfolio_size,
-                CASE 
-                    WHEN FIND_IN_SET(%s, i.preferred_domains) > 0 THEN 100
-                    ELSE 50
-                END AS match_score,
-                CASE 
-                    WHEN FIND_IN_SET(%s, i.preferred_domains) > 0 THEN 'Perfect domain match'
-                    ELSE 'Investment range compatible'
-                END AS match_reason
-            FROM Investors i
-            WHERE i.investment_min <= %s 
-              AND i.investment_max >= %s
-            ORDER BY match_score DESC, i.portfolio_size ASC
-            LIMIT 10
-        """, (startup['domain_id'], startup['domain_id'], 
-              startup['funding_required'], startup['funding_required']))
+        if DB_TYPE == 'postgresql':
+            cursor.execute("""
+                SELECT 
+                    i.investor_id,
+                    i.name,
+                    i.investment_min,
+                    i.investment_max,
+                    i.preferred_domains,
+                    i.location,
+                    i.portfolio_size,
+                    CASE 
+                        WHEN (',' || i.preferred_domains || ',') LIKE %s THEN 100
+                        ELSE 50
+                    END AS match_score,
+                    CASE 
+                        WHEN (',' || i.preferred_domains || ',') LIKE %s THEN 'Perfect domain match'
+                        ELSE 'Investment range compatible'
+                    END AS match_reason
+                FROM Investors i
+                WHERE i.investment_min <= %s 
+                  AND i.investment_max >= %s
+                ORDER BY match_score DESC, i.portfolio_size ASC
+                LIMIT 10
+            """, ('%,' + str(startup['domain_id']) + ',%', 
+                  '%,' + str(startup['domain_id']) + ',%',
+                  startup['funding_required'], startup['funding_required']))
+        else:
+            cursor.execute("""
+                SELECT 
+                    i.investor_id,
+                    i.name,
+                    i.investment_min,
+                    i.investment_max,
+                    i.preferred_domains,
+                    i.location,
+                    i.portfolio_size,
+                    CASE 
+                        WHEN FIND_IN_SET(%s, i.preferred_domains) > 0 THEN 100
+                        ELSE 50
+                    END AS match_score,
+                    CASE 
+                        WHEN FIND_IN_SET(%s, i.preferred_domains) > 0 THEN 'Perfect domain match'
+                        ELSE 'Investment range compatible'
+                    END AS match_reason
+                FROM Investors i
+                WHERE i.investment_min <= %s 
+                  AND i.investment_max >= %s
+                ORDER BY match_score DESC, i.portfolio_size ASC
+                LIMIT 10
+            """, (startup['domain_id'], startup['domain_id'], 
+                  startup['funding_required'], startup['funding_required']))
         
         matched_investors = cursor.fetchall()
         
@@ -434,39 +474,75 @@ def investor_dashboard():
         cursor = get_cursor(conn)
         
         # Get investor details
-        cursor.execute("""
-            SELECT i.*, 
-                   COALESCE(SUM(f.amount), 0) AS total_invested,
-                   COUNT(DISTINCT f.startup_id) AS startups_funded
-            FROM Investors i
-            LEFT JOIN Funding f ON i.investor_id = f.investor_id
-            WHERE i.investor_id = %s
-            GROUP BY i.investor_id
-        """, (investor_id,))
+        if DB_TYPE == 'postgresql':
+            cursor.execute("""
+                SELECT i.*, 
+                       COALESCE(SUM(f.amount), 0) AS total_invested,
+                       COUNT(DISTINCT f.startup_id) AS startups_funded
+                FROM Investors i
+                LEFT JOIN Funding f ON i.investor_id = f.investor_id
+                WHERE i.investor_id = %s
+                GROUP BY i.investor_id, i.name, i.email, i.password_hash, i.investment_min,
+                         i.investment_max, i.preferred_domains, i.phone, i.location,
+                         i.portfolio_size, i.created_at
+            """, (investor_id,))
+        else:
+            cursor.execute("""
+                SELECT i.*, 
+                       COALESCE(SUM(f.amount), 0) AS total_invested,
+                       COUNT(DISTINCT f.startup_id) AS startups_funded
+                FROM Investors i
+                LEFT JOIN Funding f ON i.investor_id = f.investor_id
+                WHERE i.investor_id = %s
+                GROUP BY i.investor_id
+            """, (investor_id,))
         investor = cursor.fetchone()
         
         # Get matched startups
-        cursor.execute("""
-            SELECT 
-                s.startup_id,
-                s.name,
-                d.domain_name,
-                s.funding_required,
-                s.location,
-                s.description,
-                s.is_funded,
-                CASE 
-                    WHEN FIND_IN_SET(s.domain_id, %s) > 0 THEN 100
-                    ELSE 50
-                END AS match_score
-            FROM Startups s
-            JOIN Domains d ON s.domain_id = d.domain_id
-            WHERE s.funding_required BETWEEN %s AND %s
-              AND s.is_funded = FALSE
-            ORDER BY match_score DESC, s.founded_date DESC
-            LIMIT 10
-        """, (investor['preferred_domains'], investor['investment_min'], 
-              investor['investment_max']))
+        if DB_TYPE == 'postgresql':
+            cursor.execute("""
+                SELECT 
+                    s.startup_id,
+                    s.name,
+                    d.domain_name,
+                    s.funding_required,
+                    s.location,
+                    s.description,
+                    s.is_funded,
+                    CASE 
+                        WHEN (',' || %s || ',') LIKE ('%%,' || s.domain_id::text || ',%%') THEN 100
+                        ELSE 50
+                    END AS match_score
+                FROM Startups s
+                JOIN Domains d ON s.domain_id = d.domain_id
+                WHERE s.funding_required BETWEEN %s AND %s
+                  AND s.is_funded = FALSE
+                ORDER BY match_score DESC, s.founded_date DESC
+                LIMIT 10
+            """, (investor['preferred_domains'], investor['investment_min'], 
+                  investor['investment_max']))
+        else:
+            cursor.execute("""
+                SELECT 
+                    s.startup_id,
+                    s.name,
+                    d.domain_name,
+                    s.funding_required,
+                    s.location,
+                    s.description,
+                    s.is_funded,
+                    CASE 
+                        WHEN FIND_IN_SET(s.domain_id, %s) > 0 THEN 100
+                        ELSE 50
+                    END AS match_score
+                FROM Startups s
+                JOIN Domains d ON s.domain_id = d.domain_id
+                WHERE s.funding_required BETWEEN %s AND %s
+                  AND s.is_funded = FALSE
+                ORDER BY match_score DESC, s.founded_date DESC
+                LIMIT 10
+            """, (investor['preferred_domains'], investor['investment_min'], 
+                  investor['investment_max']))
         
         matched_startups = cursor.fetchall()
         
