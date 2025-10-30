@@ -22,6 +22,7 @@ except ImportError:
 try:
     import psycopg2
     from psycopg2.extras import RealDictCursor
+    from psycopg2 import Error as PostgreSQLError
     POSTGRESQL_AVAILABLE = True
 except ImportError:
     POSTGRESQL_AVAILABLE = False
@@ -51,6 +52,16 @@ else:
         'database': 'funding_system'
     }
     print("🏠 Running locally - Using MySQL")
+
+# ============================================
+# Unified Error Handling for Both Databases
+# ============================================
+
+# Create a unified Error class that works for both MySQL and PostgreSQL
+if DB_TYPE == 'postgresql':
+    Error = PostgreSQLError
+else:
+    Error = MySQLError
 
 # ============================================
 # Database Connection Helper (Auto-Switching)
