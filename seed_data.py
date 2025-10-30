@@ -27,9 +27,15 @@ except ImportError:
 
 def hash_password(password):
     """Hash password using bcrypt"""
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
-    return hashed.decode('utf-8')
+    try:
+        if isinstance(password, str):
+            password = password.encode('utf-8')
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(password, salt)
+        return hashed.decode('utf-8')
+    except Exception as e:
+        print(f"Password hashing error: {e}")
+        raise
 
 
 def get_db_connection():
