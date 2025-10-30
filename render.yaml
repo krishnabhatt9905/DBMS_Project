@@ -1,0 +1,26 @@
+# Render Blueprint Configuration for DBMS Project
+services:
+  - type: web
+    name: dbms-funding-system
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DB_HOST
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: funding_system
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+
+databases:
+  - name: funding-db
+    databaseName: funding_system
+    user: funding_user
+

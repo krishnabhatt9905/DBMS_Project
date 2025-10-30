@@ -1,0 +1,21 @@
+# DBMS Project: Startup Funding System
+# Python dependencies
+
+# Web Framework
+Flask==2.3.0
+Werkzeug==2.3.0
+
+# Database Connectors (Auto-detects environment)
+# Both are included for seamless local (MySQL) and Render (PostgreSQL) deployment
+mysql-connector-python==8.1.0
+psycopg2-binary==2.9.9
+
+# Password Hashing
+bcrypt==4.0.1
+
+# Additional utilities
+python-dotenv==1.0.0
+
+# Production Server
+gunicorn==21.2.0
+

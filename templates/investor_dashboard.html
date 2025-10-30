@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block title %}Investor Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .welcome-banner {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #374151 100%);
+        color: white;
+        padding: 50px 40px;
+        border-radius: 12px;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .welcome-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+    
+    .welcome-banner h1,
+    .welcome-banner p {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .stat-box {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stat-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--primary-color);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-box:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .stat-box:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
+        border-color: var(--primary-color);
+    }
+    
+    .stat-number {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 8px;
+    }
+    
+    .stat-label {
+        font-size: 14px;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+    }
+    
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    
+    .section-header svg {
+        color: var(--primary-color);
+    }
+    
+    @media (max-width: 768px) {
+        .welcome-banner {
+            padding: 30px 20px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-banner h1 {
+            font-size: 24px !important;
+        }
+        
+        .welcome-banner p {
+            font-size: 14px !important;
+        }
+        
+        .grid-2,
+        .grid-3,
+        .grid-4 {
+            grid-template-columns: 1fr !important;
+            gap: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="welcome-banner">
+    <h1 style="color: white; margin-bottom: 10px; font-size: 32px; font-weight: 700;">Welcome, {{ investor.name }}</h1>
+    <p style="opacity: 0.95; font-size: 16px; font-weight: 400;">Discover promising startups and manage your investment portfolio</p>
+</div>
+
+<!-- Investor Profile Card -->
+<div class="card">
+    <h2>Your Profile</h2>
+    <div class="grid-2" style="margin-top: 15px;">
+        <div><strong>Name:</strong> {{ investor.name }}</div>
+        <div><strong>Location:</strong> {{ investor.location }}</div>
+        <div><strong>Investment Range:</strong> ₹{{ "%.2f"|format(investor.investment_min / 10000000) }} - {{ "%.2f"|format(investor.investment_max / 10000000) }} Cr</div>
+        <div><strong>Portfolio Size:</strong> {{ investor.portfolio_size }} startups</div>
+        <div><strong>Total Invested:</strong> ₹{{ "%.2f"|format(investor.total_invested / 10000000) }} Cr</div>
+        <div><strong>Startups Funded:</strong> {{ investor.startups_funded }}</div>
+    </div>
+    {% if investor.phone %}
+        <div style="margin-top: 15px;">
+            <strong>Phone:</strong> {{ investor.phone }}
+        </div>
+    {% endif %}
+</div>
+
+<!-- Matched Startups -->
+<div class="card">
+    <h2>🎯 Matched Startups ({{ matched_startups|length }})</h2>
+    <p style="color: #666; margin-bottom: 20px;">
+        Startups that match your investment criteria and domain preferences
+    </p>
+    
+    {% if matched_startups %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Startup Name</th>
+                    <th>Domain</th>
+                    <th>Funding Required</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Match Quality</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for startup in matched_startups %}
+                <tr>
+                    <td>
+                        <strong>{{ startup.name }}</strong>
+                        {% if startup.description %}
+                            <br><small style="color: #666;">{{ startup.description[:80] }}...</small>
+                        {% endif %}
+                    </td>
+                    <td><span class="badge badge-info">{{ startup.domain_name }}</span></td>
+                    <td>₹{{ "%.2f"|format(startup.funding_required / 10000000) }} Cr</td>
+                    <td>{{ startup.location }}</td>
+                    <td>
+                        {% if startup.is_funded %}
+                            <span class="badge badge-success">Funded</span>
+                        {% else %}
+                            <span class="badge badge-warning">Seeking Funding</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if startup.match_score >= 100 %}
+                            <span class="badge badge-success">Perfect Match</span>
+                        {% else %}
+                            <span class="badge badge-info">Good Match</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="color: #999; text-align: center; padding: 40px;">
+            No matching startups found. Adjust your investment range or domain preferences.
+        </p>
+    {% endif %}
+</div>
+
+<!-- Portfolio / Investment History -->
+<div class="card">
+    <h2>📊 Your Portfolio</h2>
+    
+    {% if portfolio %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Startup</th>
+                    <th>Domain</th>
+                    <th>Amount Invested</th>
+                    <th>Round</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for investment in portfolio %}
+                <tr>
+                    <td>{{ investment.funding_date }}</td>
+                    <td><strong>{{ investment.startup_name }}</strong></td>
+                    <td><span class="badge badge-info">{{ investment.domain_name }}</span></td>
+                    <td>₹{{ "%.2f"|format(investment.amount / 10000000) }} Cr</td>
+                    <td><span class="badge badge-success">{{ investment.funding_round }}</span></td>
+                    <td>{{ investment.notes or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 5px;">
+            <div class="grid-3">
+                <div>
+                    <strong>Total Invested:</strong><br>
+                    <span style="font-size: 24px; color: #667eea;">₹{{ "%.2f"|format(investor.total_invested / 10000000) }} Cr</span>
+                </div>
+                <div>
+                    <strong>Startups Funded:</strong><br>
+                    <span style="font-size: 24px; color: #667eea;">{{ investor.startups_funded }}</span>
+                </div>
+                <div>
+                    <strong>Avg. Investment:</strong><br>
+                    <span style="font-size: 24px; color: #667eea;">
+                        {% if investor.startups_funded > 0 %}
+                            ₹{{ "%.2f"|format((investor.total_invested / investor.startups_funded) / 10000000) }} Cr
+                        {% else %}
+                            ₹0 Cr
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p style="color: #999; text-align: center; padding: 40px;">
+            No investments yet. Start by exploring matched startups above!
+        </p>
+    {% endif %}
+</div>
+
+<!-- Quick Stats -->
+<div class="grid-3" style="margin-top: 30px;">
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div style="font-size: 32px; font-weight: bold;">{{ matched_startups|length }}</div>
+        <div style="margin-top: 10px;">Matched Startups</div>
+    </div>
+    
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+        <div style="font-size: 32px; font-weight: bold;">{{ investor.startups_funded }}</div>
+        <div style="margin-top: 10px;">Portfolio Companies</div>
+    </div>
+    
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+        <div style="font-size: 32px; font-weight: bold;">₹{{ "%.1f"|format(investor.total_invested / 10000000) }} Cr</div>
+        <div style="margin-top: 10px;">Total Deployed</div>
+    </div>
+</div>
+
+<!-- Investment Insights -->
+{% if portfolio %}
+<div class="card" style="margin-top: 30px;">
+    <h2>📈 Investment Insights</h2>
+    <div style="margin-top: 15px;">
+        <h3 style="font-size: 18px; color: #667eea; margin-bottom: 10px;">Domain Distribution</h3>
+        {% set domain_counts = {} %}
+        {% for investment in portfolio %}
+            {% if investment.domain_name in domain_counts %}
+                {% set _ = domain_counts.update({investment.domain_name: domain_counts[investment.domain_name] + 1}) %}
+            {% else %}
+                {% set _ = domain_counts.update({investment.domain_name: 1}) %}
+            {% endif %}
+        {% endfor %}
+        
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            {% for domain, count in domain_counts.items() %}
+                <div class="badge badge-info">{{ domain }}: {{ count }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

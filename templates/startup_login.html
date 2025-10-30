@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Startup Login{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 0 auto;">
+    <h1 style="text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 12px;">Startup Login</h1>
+    <p style="text-align: center; color: var(--text-light); margin-bottom: 40px;">Access your startup dashboard</p>
+</div>
+
+<div class="card" style="max-width: 500px; margin: 0 auto;">
+    <form method="POST" action="/startup/login">
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required 
+                   placeholder="contact@yourstartup.com"
+                   style="border: 1px solid var(--border-color);">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required 
+                   placeholder="Enter your password"
+                   style="border: 1px solid var(--border-color);">
+        </div>
+        
+        <div style="margin-top: 30px; display: flex; gap: 12px;">
+            <button type="submit" class="btn" style="flex: 1;">Sign In</button>
+            <a href="/startup/register" class="btn btn-secondary" style="flex: 1; text-align: center;">Register</a>
+        </div>
+    </form>
+</div>
+
+<div class="card" style="max-width: 500px; margin: 30px auto; background: var(--background-light); border: 1px solid var(--border-color);">
+    <h3 style="color: var(--primary-color); margin-bottom: 16px;">Demo Accounts</h3>
+    <p style="color: var(--text-light); margin-bottom: 16px;">Use these sample accounts for testing (Password: password123):</p>
+    <ul style="margin-left: 20px; color: var(--text-light); line-height: 1.8;">
+        <li>contact@aiinsights.com</li>
+        <li>hello@finflow.io</li>
+        <li>info@medicareai.com</li>
+    </ul>
+</div>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="/" style="color: var(--text-light); text-decoration: none; font-weight: 500;">Back to Home</a>
+</div>
+{% endblock %}
+

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Investor Login{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 0 auto;">
+    <h1 style="text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 12px;">Investor Login</h1>
+    <p style="text-align: center; color: var(--text-light); margin-bottom: 40px;">Access your investment portfolio</p>
+</div>
+
+<div class="card" style="max-width: 500px; margin: 30px auto;">
+    <form method="POST" action="/investor/login">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required 
+                   placeholder="invest@yourfirm.com">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required 
+                   placeholder="Enter your password">
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <button type="submit" class="btn">Login</button>
+            <a href="/investor/register" class="btn btn-secondary">Register</a>
+        </div>
+    </form>
+</div>
+
+<div class="card" style="max-width: 500px; margin: 20px auto; background: #f8f9fa;">
+    <h3>💡 Demo Accounts</h3>
+    <p style="color: #666; margin: 10px 0;">Sample investor accounts in database:</p>
+    <ul style="margin-left: 20px; color: #666;">
+        <li><strong>Email:</strong> invest@accel.com</li>
+        <li><strong>Email:</strong> deals@sequoia.in</li>
+        <li><strong>Email:</strong> info@tigerglobal.com</li>
+    </ul>
+    <p style="color: #999; font-size: 14px; margin-top: 10px;">
+        <em>Note: Password hashes are in the database. For demo, register a new account.</em>
+    </p>
+</div>
+
+<div style="text-align: center; margin: 20px 0;">
+    <a href="/">← Back to Home</a>
+</div>
+{% endblock %}
+

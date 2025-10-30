@@ -1,0 +1,128 @@
+╔══════════════════════════════════════════════════════════════╗
+║                 🚀 START DBMS PROJECT                        ║
+║     Startup Funding & Investor Matchmaking System           ║
+╚══════════════════════════════════════════════════════════════╝
+
+📋 QUICK START (Choose One Method):
+
+METHOD 1: Automated Script (Easiest)
+═══════════════════════════════════════════════════════════════
+  $ cd DBMS_Project
+  $ ./START_PROJECT.sh
+
+  This script will:
+  ✓ Check prerequisites
+  ✓ Set up virtual environment
+  ✓ Install dependencies
+  ✓ Create MySQL database
+  ✓ Import sample data
+  ✓ Start Flask application
+
+
+METHOD 2: Manual Setup (Step-by-Step)
+═══════════════════════════════════════════════════════════════
+  See: MANUAL_STARTUP.md
+
+  Summary:
+  1. Install/Start MySQL
+  2. Create database: CREATE DATABASE funding_system;
+  3. Import schema: mysql -u root funding_system < database_schema.sql
+  4. Create venv: python3 -m venv venv
+  5. Activate: source venv/bin/activate
+  6. Install: pip install Flask bcrypt mysql-connector-python
+  7. Update password in app.py (line 16)
+  8. Run: python3 app.py
+  9. Open: http://localhost:5000
+
+
+BEFORE STARTING:
+═══════════════════════════════════════════════════════════════
+  ⚠️  IMPORTANT: Update MySQL password in app.py (line 16)
+  
+  Open app.py and change:
+      'password': 'your_password'  ← Change to your MySQL password
+  
+  If no password:
+      'password': ''  ← Empty string
+
+
+AFTER STARTING:
+═══════════════════════════════════════════════════════════════
+  Open browser: http://localhost:5000
+  
+  You'll see:
+  • Beautiful landing page
+  • Startup registration option
+  • Investor registration option
+  • About page with project info
+
+
+TROUBLESHOOTING:
+═══════════════════════════════════════════════════════════════
+  Error: "No module named 'flask'"
+    → Run: pip install Flask bcrypt mysql-connector-python
+  
+  Error: "Unknown database 'funding_system'"
+    → Run: mysql -u root -e "CREATE DATABASE funding_system"
+    → Run: mysql -u root funding_system < database_schema.sql
+  
+  Error: "Access denied"
+    → Update password in app.py line 16
+  
+  For more help, see: MANUAL_STARTUP.md
+
+
+FILES IN THIS PROJECT:
+═══════════════════════════════════════════════════════════════
+  START_PROJECT.sh       ← Automated startup script
+  MANUAL_STARTUP.md      ← Step-by-step manual guide
+  app.py                 ← Flask application (441 lines)
+  database_schema.sql    ← Database with sample data (204 lines)
+  queries.sql            ← SQL queries (320 lines)
+  reports.sql            ← Analytical reports (283 lines)
+  templates/             ← 9 HTML templates
+  requirements.txt       ← Python dependencies
+  README.md              ← Complete documentation
+  TEST_GUIDE.md          ← Testing instructions
+  ER_DIAGRAM.md          ← Entity-Relationship diagram
+  DATAFLOW_DIAGRAM.md    ← Data flow diagram
+
+
+DEMO CREDENTIALS (After importing sample data):
+═══════════════════════════════════════════════════════════════
+  Sample startups in database:
+    • contact@aiinsights.com
+    • hello@finflow.io
+    • info@medicareai.com
+  
+  Sample investors in database:
+    • invest@accel.com
+    • deals@sequoia.in
+  
+  Note: Passwords are hashed. For demo, register new accounts.
+
+
+WHAT YOU'LL SEE:
+═══════════════════════════════════════════════════════════════
+  • Landing Page: Beautiful gradient design
+  • Registration Forms: For startups and investors
+  • Login System: With bcrypt password hashing
+  • Startup Dashboard: Shows matched investors with scores
+  • Investor Dashboard: Shows matched startups and portfolio
+  • About Page: Project information
+
+
+PRESENTATION DEMO FLOW:
+═══════════════════════════════════════════════════════════════
+  1. Start app → Show landing page
+  2. Click "Register Startup" → Fill form
+  3. Login → Show dashboard
+  4. Point to matched investors table
+  5. Explain matchmaking algorithm
+  6. Show code in app.py
+  7. Show database with: mysql -u root funding_system
+
+
+═══════════════════════════════════════════════════════════════
+Ready to start? Choose METHOD 1 or METHOD 2 above!
+═══════════════════════════════════════════════════════════════

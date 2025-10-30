@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}About - Startup Funding System{% endblock %}
+
+{% block extra_css %}
+<style>
+    @media (max-width: 768px) {
+        .grid-2 {
+            grid-template-columns: 1fr !important;
+            gap: 15px;
+        }
+        
+        .grid-4 {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 15px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 40px;">
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 42px; color: var(--text-dark); margin-bottom: 16px;">About This Project</h1>
+    <p style="font-size: 18px; color: var(--text-light); max-width: 800px;">A comprehensive database management system demonstrating enterprise-level application development</p>
+</div>
+
+<div class="card">
+    <h2>Overview</h2>
+    <p style="font-size: 16px; line-height: 1.8; color: var(--text-light);">
+        This comprehensive Database Management System project demonstrates the complete lifecycle of 
+        database application development—from normalized schema design to full-stack web application deployment 
+        with modern security practices and intelligent data processing.
+    </p>
+</div>
+
+<div class="card">
+    <h2>Project Objective</h2>
+    <p style="font-size: 16px; line-height: 1.8; color: var(--text-light);">
+        To create a professional platform that connects startups seeking funding with qualified investors. 
+        The system employs intelligent matchmaking algorithms to identify optimal investor-startup pairs based on 
+        multiple criteria including domain expertise, investment capacity, funding requirements, and strategic alignment.
+    </p>
+</div>
+
+<div class="card">
+    <h2>Team Structure & Responsibilities</h2>
+    
+    <div style="margin: 30px 0; padding: 24px; background: var(--background-light); border-radius: 8px; border-left: 3px solid var(--primary-color);">
+        <h3 style="color: var(--primary-color); margin-bottom: 16px;">Database Designer</h3>
+        <ul style="margin-left: 20px; color: var(--text-light); line-height: 1.8;">
+            <li>Designed comprehensive ER Diagram with 5 main entities</li>
+            <li>Created normalized database schema (3NF) for optimal data integrity</li>
+            <li>Implemented foreign key relationships and constraints</li>
+            <li>Added strategic indexes for query optimization</li>
+            <li>Ensured data integrity through comprehensive constraint implementation</li>
+        </ul>
+    </div>
+    
+    <div style="margin: 30px 0; padding: 24px; background: var(--background-light); border-radius: 8px; border-left: 3px solid var(--primary-color);">
+        <h3 style="color: var(--primary-color); margin-bottom: 16px;">Backend Query Developer</h3>
+        <ul style="margin-left: 20px; color: var(--text-light); line-height: 1.8;">
+            <li>Developed 50+ SQL queries for comprehensive operations</li>
+            <li>Implemented complex matchmaking algorithm using advanced JOINs</li>
+            <li>Created stored procedures for reusable business logic</li>
+            <li>Developed custom database functions for calculations</li>
+            <li>Optimized query performance using EXPLAIN and strategic indexing</li>
+        </ul>
+    </div>
+    
+    <div style="margin: 30px 0; padding: 24px; background: var(--background-light); border-radius: 8px; border-left: 3px solid var(--primary-color);">
+        <h3 style="color: var(--primary-color); margin-bottom: 16px;">Application Developer</h3>
+        <ul style="margin-left: 20px; color: var(--text-light); line-height: 1.8;">
+            <li>Built Flask web application with MVC architecture</li>
+            <li>Implemented secure user authentication with bcrypt hashing</li>
+            <li>Created robust session management system</li>
+            <li>Developed professional, responsive UI with modern CSS</li>
+            <li>Integrated backend queries with frontend interfaces</li>
+        </ul>
+    </div>
+    
+    <div style="margin: 30px 0; padding: 24px; background: var(--background-light); border-radius: 8px; border-left: 3px solid var(--primary-color);">
+        <h3 style="color: var(--primary-color); margin-bottom: 16px;">Reporting & Integration Specialist</h3>
+        <ul style="margin-left: 20px; color: var(--text-light); line-height: 1.8;">
+            <li>Generated 10+ comprehensive analytical reports</li>
+            <li>Created interactive dashboards with key performance metrics</li>
+            <li>Implemented data export functionality (CSV/Excel)</li>
+            <li>Coordinated final system integration across all modules</li>
+            <li>Prepared comprehensive project documentation</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Technology Stack</h2>
+    <div class="grid-2" style="margin-top: 20px; gap: 20px;">
+        <div style="padding: 16px; background: var(--background-light); border-radius: 6px;">
+            <strong style="color: var(--primary-color);">Database:</strong> MySQL 5.7+ / PostgreSQL
+        </div>
+        <div style="padding: 16px; background: var(--background-light); border-radius: 6px;">
+            <strong style="color: var(--primary-color);">Backend:</strong> Python Flask Framework
+        </div>
+        <div style="padding: 16px; background: var(--background-light); border-radius: 6px;">
+            <strong style="color: var(--primary-color);">Security:</strong> Bcrypt Encryption
+        </div>
+        <div style="padding: 16px; background: var(--background-light); border-radius: 6px;">
+            <strong style="color: var(--primary-color);">Frontend:</strong> HTML5, Modern CSS3
+        </div>
+        <div style="padding: 16px; background: var(--background-light); border-radius: 6px;">
+            <strong style="color: var(--primary-color);">Architecture:</strong> MVC Design Pattern
+        </div>
+        <div style="padding: 16px; background: var(--background-light); border-radius: 6px;">
+            <strong style="color: var(--primary-color);">Session:</strong> Flask-Session Management
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Key Features Implemented</h2>
+    <div class="grid-2" style="margin-top: 20px; gap: 12px;">
+        <div style="padding: 12px; background: var(--background-light); border-radius: 6px; color: var(--text-dark);">• Normalized database design (3NF)</div>
+        <div style="padding: 12px; background: var(--background-light); border-radius: 6px; color: var(--text-dark);">• Complex SQL queries with JOINs</div>
+        <div style="padding: 12px; background: var(--background-light); border-radius: 6px; color: var(--text-dark);">• Stored procedures & functions</div>
+        <div style="padding: 12px; background: var(--background-light); border-radius: 6px; color: var(--text-dark);">• Secure authentication & authorization</div>
+        <div style="padding: 12px; background: var(--background-light); border-radius: 6px; color: var(--text-dark);">• Advanced session management</div>
+        <div style="padding: 12px; background: var(--background-light); border-radius: 6px; color: var(--text-dark);">• Intelligent matchmaking algorithm</div>
+        <div style="padding: 12px; background: var(--background-light); border-radius: 6px; color: var(--text-dark);">• Real-time data processing</div>
+        <div style="padding: 12px; background: var(--background-light); border-radius: 6px; color: var(--text-dark);">• Comprehensive analytical reports</div>
+        <div style="padding: 12px; background: var(--background-light); border-radius: 6px; color: var(--text-dark);">• Fully responsive interface</div>
+        <div style="padding: 12px; background: var(--background-light); border-radius: 6px; color: var(--text-dark);">• Data export capabilities</div>
+    </div>
+</div>
+
+<div class="card" style="background: var(--background-light); border: 1px solid var(--border-color);">
+    <h2>System Metrics</h2>
+    <div class="grid-4" style="margin-top: 30px; text-align: center; gap: 20px;">
+        <div style="padding: 20px;">
+            <div style="font-size: 36px; font-weight: 700; color: var(--primary-color); margin-bottom: 8px;">5</div>
+            <div style="color: var(--text-light); font-size: 14px; font-weight: 500;">Database Tables</div>
+        </div>
+        <div style="padding: 20px;">
+            <div style="font-size: 36px; font-weight: 700; color: var(--primary-color); margin-bottom: 8px;">8</div>
+            <div style="color: var(--text-light); font-size: 14px; font-weight: 500;">Industry Domains</div>
+        </div>
+        <div style="padding: 20px;">
+            <div style="font-size: 36px; font-weight: 700; color: var(--primary-color); margin-bottom: 8px;">50+</div>
+            <div style="color: var(--text-light); font-size: 14px; font-weight: 500;">SQL Queries</div>
+        </div>
+        <div style="padding: 20px;">
+            <div style="font-size: 36px; font-weight: 700; color: var(--primary-color); margin-bottom: 8px;">3</div>
+            <div style="color: var(--text-light); font-size: 14px; font-weight: 500;">Stored Procedures</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Learning Outcomes</h2>
+    <p style="font-size: 16px; line-height: 1.8; color: var(--text-light); margin-bottom: 24px;">
+        This project demonstrates comprehensive mastery of database management and full-stack development:
+    </p>
+    <ul style="margin-left: 20px; color: var(--text-light); line-height: 2;">
+        <li><strong style="color: var(--text-dark);">Database Design:</strong> ER modeling, normalization techniques, relationship mapping</li>
+        <li><strong style="color: var(--text-dark);">SQL Proficiency:</strong> Complex queries, JOINs, subqueries, stored procedures, functions</li>
+        <li><strong style="color: var(--text-dark);">Application Development:</strong> MVC architecture, session management, authentication systems</li>
+        <li><strong style="color: var(--text-dark);">Security Best Practices:</strong> Password hashing, SQL injection prevention, input validation</li>
+        <li><strong style="color: var(--text-dark);">System Integration:</strong> Frontend-backend communication, RESTful design principles</li>
+        <li><strong style="color: var(--text-dark);">Data Analytics:</strong> Report generation, data visualization, export functionality</li>
+    </ul>
+</div>
+
+<div style="text-align: center; margin: 50px 0;">
+    <a href="/" class="btn">Back to Home</a>
+</div>
+{% endblock %}
+

@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Startup Registration{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .form-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        box-shadow: 0 8px 24px rgba(30, 58, 138, 0.2);
+    }
+    
+    .input-with-icon {
+        position: relative;
+    }
+    
+    .input-with-icon svg {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-light);
+        pointer-events: none;
+    }
+    
+    .input-with-icon input,
+    .input-with-icon select,
+    .input-with-icon textarea {
+        padding-left: 42px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="form-header">
+        <div class="form-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+        </div>
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 36px; color: var(--text-dark); margin-bottom: 12px;">Startup Registration</h1>
+        <p style="color: var(--text-light); font-size: 16px;">Join our platform and connect with investors</p>
+    </div>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <form method="POST" action="/startup/register">
+        <div class="form-group">
+            <label for="name">Startup Name *</label>
+            <div class="input-with-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                </svg>
+                <input type="text" id="name" name="name" required 
+                       placeholder="e.g., AI Insights" style="border: 1px solid var(--border-color);">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email *</label>
+            <div class="input-with-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <input type="email" id="email" name="email" required 
+                       placeholder="contact@yourstartup.com" style="border: 1px solid var(--border-color);">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password *</label>
+            <div class="input-with-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <input type="password" id="password" name="password" required 
+                       placeholder="Minimum 6 characters" style="border: 1px solid var(--border-color);">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="domain_id">Domain *</label>
+            <div class="input-with-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+                <select id="domain_id" name="domain_id" required style="border: 1px solid var(--border-color);">
+                    <option value="">-- Select Domain --</option>
+                    {% for domain in domains %}
+                        <option value="{{ domain.domain_id }}">{{ domain.domain_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="funding_required">Funding Required (₹) *</label>
+            <div class="input-with-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+                <input type="number" id="funding_required" name="funding_required" 
+                       required min="100000" step="100000"
+                       placeholder="e.g., 5000000 (50 Lakhs)" style="border: 1px solid var(--border-color);">
+            </div>
+            <small style="color: var(--text-light); margin-left: 42px; display: block; margin-top: 4px;">Enter amount in Rupees</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description</label>
+            <div class="input-with-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                <textarea id="description" name="description" rows="4" 
+                          placeholder="Brief description of your startup..." style="border: 1px solid var(--border-color); padding-top: 12px;"></textarea>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="founded_date">Founded Date</label>
+            <input type="date" id="founded_date" name="founded_date">
+        </div>
+        
+        <div class="form-group">
+            <label for="location">Location *</label>
+            <input type="text" id="location" name="location" required 
+                   placeholder="e.g., Bangalore">
+        </div>
+        
+        <div class="form-group">
+            <label for="website">Website (optional)</label>
+            <input type="url" id="website" name="website" 
+                   placeholder="https://www.yourstartup.com">
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <button type="submit" class="btn">Register Startup</button>
+            <a href="/startup/login" class="btn btn-secondary">Already have an account? Login</a>
+        </div>
+    </form>
+</div>
+
+<div style="text-align: center; margin: 20px 0;">
+    <a href="/">← Back to Home</a>
+</div>
+{% endblock %}
+

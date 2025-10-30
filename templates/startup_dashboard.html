@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block title %}Startup Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .welcome-banner {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #374151 100%);
+        color: white;
+        padding: 50px 40px;
+        border-radius: 12px;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .welcome-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+    
+    .welcome-banner h1,
+    .welcome-banner p {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .stat-box {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stat-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--primary-color);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-box:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .stat-box:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
+        border-color: var(--primary-color);
+    }
+    
+    .stat-number {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 8px;
+    }
+    
+    .stat-label {
+        font-size: 14px;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+    }
+    
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    
+    .section-header svg {
+        color: var(--primary-color);
+    }
+    
+    .profile-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+    
+    .profile-item {
+        padding: 20px;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(52, 211, 153, 0.05) 100%);
+        border-radius: 8px;
+        border-left: 3px solid var(--primary-color);
+        transition: all 0.3s ease;
+    }
+    
+    .profile-item:hover {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(52, 211, 153, 0.08) 100%);
+        transform: translateX(4px);
+    }
+    
+    .profile-item strong {
+        color: var(--primary-color);
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .profile-item div {
+        color: var(--text-dark);
+        font-size: 15px;
+        font-weight: 500;
+    }
+    
+    @media (max-width: 768px) {
+        .welcome-banner {
+            padding: 24px 20px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-banner h1 {
+            font-size: 24px !important;
+        }
+        
+        .welcome-banner p {
+            font-size: 14px !important;
+        }
+        
+        .profile-grid,
+        .grid-2,
+        .grid-3,
+        .grid-4 {
+            grid-template-columns: 1fr !important;
+            gap: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="welcome-banner">
+    <h1 style="color: white; margin-bottom: 10px; font-size: 32px; font-weight: 700;">Welcome, {{ startup.name }}</h1>
+    <p style="opacity: 0.95; font-size: 16px; font-weight: 400;">Manage your startup profile and connect with qualified investors</p>
+</div>
+
+<!-- Startup Profile Card -->
+<div class="card">
+    <h2>Your Profile</h2>
+    <div class="grid-2" style="margin-top: 15px;">
+        <div><strong>Name:</strong> {{ startup.name }}</div>
+        <div><strong>Domain:</strong> {{ startup.domain_name }}</div>
+        <div><strong>Location:</strong> {{ startup.location }}</div>
+        <div><strong>Founded:</strong> {{ startup.founded_date or 'N/A' }}</div>
+        <div><strong>Funding Required:</strong> ₹{{ "%.2f"|format(startup.funding_required / 10000000) }} Cr</div>
+        <div><strong>Funding Received:</strong> ₹{{ "%.2f"|format(startup.total_funding_received / 10000000) }} Cr</div>
+        <div><strong>Status:</strong> 
+            {% if startup.is_funded %}
+                <span class="badge badge-success">Funded</span>
+            {% else %}
+                <span class="badge badge-warning">Seeking Funding</span>
+            {% endif %}
+        </div>
+    </div>
+    {% if startup.description %}
+        <div style="margin-top: 15px;">
+            <strong>Description:</strong>
+            <p style="color: #666; margin-top: 5px;">{{ startup.description }}</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Matched Investors -->
+<div class="card">
+    <h2>🎯 Matched Investors ({{ matched_investors|length }})</h2>
+    <p style="color: #666; margin-bottom: 20px;">
+        These investors match your domain and funding requirements
+    </p>
+    
+    {% if matched_investors %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Investor Name</th>
+                    <th>Investment Range</th>
+                    <th>Location</th>
+                    <th>Portfolio Size</th>
+                    <th>Match Quality</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for investor in matched_investors %}
+                <tr>
+                    <td><strong>{{ investor.name }}</strong></td>
+                    <td>₹{{ "%.2f"|format(investor.investment_min / 10000000) }} - {{ "%.2f"|format(investor.investment_max / 10000000) }} Cr</td>
+                    <td>{{ investor.location }}</td>
+                    <td>{{ investor.portfolio_size }} startups</td>
+                    <td>
+                        {% if investor.match_score >= 100 %}
+                            <span class="badge badge-success">Perfect Match ({{ investor.match_score }})</span>
+                        {% else %}
+                            <span class="badge badge-info">Good Match ({{ investor.match_score }})</span>
+                        {% endif %}
+                        <br>
+                        <small style="color: #666;">{{ investor.match_reason }}</small>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="color: #999; text-align: center; padding: 40px;">
+            No matching investors found yet. Check back later!
+        </p>
+    {% endif %}
+</div>
+
+<!-- Funding History -->
+<div class="card">
+    <h2>💰 Funding History</h2>
+    
+    {% if funding_history %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Investor</th>
+                    <th>Amount</th>
+                    <th>Round</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for funding in funding_history %}
+                <tr>
+                    <td>{{ funding.funding_date }}</td>
+                    <td><strong>{{ funding.investor_name }}</strong></td>
+                    <td>₹{{ "%.2f"|format(funding.amount / 10000000) }} Cr</td>
+                    <td><span class="badge badge-info">{{ funding.funding_round }}</span></td>
+                    <td>{{ funding.notes or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 5px;">
+            <strong>Total Funding Received:</strong> 
+            ₹{{ "%.2f"|format(startup.total_funding_received / 10000000) }} Crores
+        </div>
+    {% else %}
+        <p style="color: #999; text-align: center; padding: 40px;">
+            No funding received yet. Keep networking with investors!
+        </p>
+    {% endif %}
+</div>
+
+<!-- Quick Stats -->
+<div class="grid-3" style="margin-top: 30px;">
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div style="font-size: 32px; font-weight: bold;">{{ matched_investors|length }}</div>
+        <div style="margin-top: 10px;">Matched Investors</div>
+    </div>
+    
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+        <div style="font-size: 32px; font-weight: bold;">{{ funding_history|length }}</div>
+        <div style="margin-top: 10px;">Funding Rounds</div>
+    </div>
+    
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+        <div style="font-size: 32px; font-weight: bold;">
+            {% if startup.funding_required > 0 %}
+                {{ "%.0f"|format((startup.total_funding_received / startup.funding_required) * 100) }}%
+            {% else %}
+                0%
+            {% endif %}
+        </div>
+        <div style="margin-top: 10px;">Funding Goal Achieved</div>
+    </div>
+</div>
+{% endblock %}
+
