@@ -10,8 +10,8 @@ Werkzeug==2.3.0
 mysql-connector-python==8.1.0
 psycopg2-binary==2.9.9
 
-# Password Hashing
-bcrypt==4.0.1
+# Password Hashing (Updated for Render compatibility)
+bcrypt==4.2.0
 
 # Additional utilities
 python-dotenv==1.0.0

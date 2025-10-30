@@ -118,13 +118,28 @@ def execute_insert(cursor, query, params):
 
 def hash_password(password):
     """Hash password using bcrypt"""
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
-    return hashed.decode('utf-8')
+    try:
+        if isinstance(password, str):
+            password = password.encode('utf-8')
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(password, salt)
+        return hashed.decode('utf-8')
+    except Exception as e:
+        print(f"Password hashing error: {e}")
+        raise
 
 def verify_password(password, hashed):
     """Verify password against hash"""
-    return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
+    try:
+        # Ensure hashed password is bytes
+        if isinstance(hashed, str):
+            hashed = hashed.encode('utf-8')
+        if isinstance(password, str):
+            password = password.encode('utf-8')
+        return bcrypt.checkpw(password, hashed)
+    except Exception as e:
+        print(f"Password verification error: {e}")
+        return False
 
 # ============================================
 # Routes: Home & Landing
