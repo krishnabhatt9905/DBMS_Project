@@ -110,6 +110,73 @@
             grid-template-columns: 1fr !important;
             gap: 12px;
         }
+        
+        /* Mobile Table Improvements */
+        table {
+            font-size: 13px;
+            min-width: 100%;
+        }
+        
+        table thead {
+            display: none;
+        }
+        
+        table tbody tr {
+            display: block;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.03) 0%, rgba(52, 211, 153, 0.03) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        table tbody tr:hover {
+            transform: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        table tbody td {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            padding: 10px 0;
+            border: none;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        table tbody td:last-child {
+            border-bottom: none;
+        }
+        
+        table tbody td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: var(--primary-color);
+            flex-shrink: 0;
+            margin-right: 15px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        table tbody td strong {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .badge {
+            font-size: 11px;
+            padding: 4px 8px;
+        }
+        
+        .card h2 {
+            font-size: 20px;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+        }
     }
 </style>
 {% endblock %}
@@ -160,23 +227,23 @@
             <tbody>
                 {% for startup in matched_startups %}
                 <tr>
-                    <td>
+                    <td data-label="Startup Name">
                         <strong>{{ startup.name }}</strong>
                         {% if startup.description %}
                             <br><small style="color: #666;">{{ startup.description[:80] }}...</small>
                         {% endif %}
                     </td>
-                    <td><span class="badge badge-info">{{ startup.domain_name }}</span></td>
-                    <td>₹{{ "%.2f"|format(startup.funding_required / 10000000) }} Cr</td>
-                    <td>{{ startup.location }}</td>
-                    <td>
+                    <td data-label="Domain"><span class="badge badge-info">{{ startup.domain_name }}</span></td>
+                    <td data-label="Funding Required">₹{{ "%.2f"|format(startup.funding_required / 10000000) }} Cr</td>
+                    <td data-label="Location">{{ startup.location }}</td>
+                    <td data-label="Status">
                         {% if startup.is_funded %}
                             <span class="badge badge-success">Funded</span>
                         {% else %}
                             <span class="badge badge-warning">Seeking Funding</span>
                         {% endif %}
                     </td>
-                    <td>
+                    <td data-label="Match Quality">
                         {% if startup.match_score >= 100 %}
                             <span class="badge badge-success">Perfect Match</span>
                         {% else %}
@@ -213,12 +280,12 @@
             <tbody>
                 {% for investment in portfolio %}
                 <tr>
-                    <td>{{ investment.funding_date }}</td>
-                    <td><strong>{{ investment.startup_name }}</strong></td>
-                    <td><span class="badge badge-info">{{ investment.domain_name }}</span></td>
-                    <td>₹{{ "%.2f"|format(investment.amount / 10000000) }} Cr</td>
-                    <td><span class="badge badge-success">{{ investment.funding_round }}</span></td>
-                    <td>{{ investment.notes or '-' }}</td>
+                    <td data-label="Date">{{ investment.funding_date }}</td>
+                    <td data-label="Startup"><strong>{{ investment.startup_name }}</strong></td>
+                    <td data-label="Domain"><span class="badge badge-info">{{ investment.domain_name }}</span></td>
+                    <td data-label="Amount Invested">₹{{ "%.2f"|format(investment.amount / 10000000) }} Cr</td>
+                    <td data-label="Round"><span class="badge badge-success">{{ investment.funding_round }}</span></td>
+                    <td data-label="Notes">{{ investment.notes or '-' }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
